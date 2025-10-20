@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>💰 Dashboard - Controle de Despesas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+      padding: 40px;
+      color: #1e293b;
+      text-align: center;
+    }
+
+    h1 {
+      color: #0284c7;
+      margin-bottom: 10px;
+    }
+
+    .panel {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 15px 25px;
+      width: 220px;
+      transition: 0.3s;
+    }
+
+    .card:hover { transform: scale(1.05); }
+
+    .card h3 {
+      margin: 0;
+      color: #0369a1;
+      font-size: 18px;
+    }
+
+    .card p {
+      font-size: 22px;
+      color: #0f172a;
+      font-weight: bold;
+    }
+
+    .add-form {
+      margin: 20px auto;
+      padding: 20px;
+      width: 80%;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    input, select {
+      padding: 6px;
+      margin: 4px;
+      border-radius: 6px;
+      border: 1px solid #94a3b8;
+    }
+
+    button {
+      background: #0284c7;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      margin: 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover { background: #0369a1; }
+
+    #searchBar {
+      width: 300px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #0284c7;
+      color: white;
+    }
+
+    tr:hover { background: #e0f2fe; }
+
+    .categoria-Alimentação { color: #0ea5e9; }
+    .categoria-Transporte { color: #22c55e; }
+    .categoria-Lazer { color: #f97316; }
+    .categoria-Saúde { color: #ef4444; }
+    .categoria-Moradia { color: #8b5cf6; }
+
+  </style>
+</head>
+<body>
+  <h1>💰 Dashboard - Controle de Despesas</h1>
+
+  <!-- Painel de resumo -->
+  <div id="panel" class="panel"></div>
+
+  <!-- Formulário -->
+  <div class="add-form">
+    <h3>➕ Adicionar Nova Despesa</h3>
+    <input id="descricao" placeholder="Descrição">
+    <input id="valor" type="number" step="0.01" placeholder="Valor">
+    <input id="data" type="date">
+    <select id="categoria"></select>
+    <button onclick="addExpense()">Adicionar</button>
+    <button onclick="addCategory()">Nova Categoria</button>
+  </div>
+
+  <!-- Campo de pesquisa -->
+  <input type="text" id="searchBar" placeholder="🔍 Buscar por descrição ou categoria..." oninput="filterExpenses()">
+
+  <!-- Tabela -->
+  <table id="expenseTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Valor (R$)</th>
+        <th>Categoria</th>
+        <th>Data</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    let categorias = [];
+    let todasDespesas = [];
+
+    async function loadExpenses() {
+      const res = await fetch('/expenses/');
+      const data = await res.json();
+      todasDespesas = data;
+      renderTable(data);
+      loadCategories(data);
+      loadSummary();
+    }
+
+    async function loadSummary() {
+      const res = await fetch('/expenses/resumo');
+      const data = await res.json();
+
+      const panel = document.getElementById('panel');
+      panel.innerHTML = '';
+      for (const [cat, total] of Object.entries(data.resumo_por_categoria)) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+          <h3>${cat}</h3>
+          <p>R$ ${total.toFixed(2)}</p>
+        `;
+        panel.appendChild(card);
+      }
+
+      // Total geral
+      const totalCard = document.createElement('div');
+      totalCard.classList.add('card');
+      totalCard.style.background = "#dcfce7";
+      totalCard.innerHTML = `
+        <h3>Total Geral 💰</h3>
+        <p>R$ ${data.total_geral.toFixed(2)}</p>
+      `;
+      panel.appendChild(totalCard);
+    }
+
+    function renderTable(expenses) {
+      const tbody = document.querySelector('#expenseTable tbody');
+      tbody.innerHTML = '';
+      expenses.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${e.id}</td>
+          <td contenteditable="true">${e.descricao}</td>
+          <td contenteditable="true">${e.valor}</td>
+          <td class="categoria-${e.categoria}">${e.categoria}</td>
+          <td contenteditable="true">${e.data}</td>
+          <td>
+            <button onclick="updateExpense(${e.id}, this)">✏️</button>
+            <button onclick="deleteExpense(${e.id})">❌</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadCategories(data) {
+      categorias = [...new Set(data.map(e => e.categoria))];
+      const select = document.getElementById('categoria');
+      select.innerHTML = '';
+      categorias.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+      });
+    }
+
+    async function addExpense() {
+      const descricao = document.getElementById('descricao').value;
+      const valor = parseFloat(document.getElementById('valor').value);
+      const categoria = document.getElementById('categoria').value;
+      const data = document.getElementById('data').value;
+
+      await fetch('/expenses/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ descricao, valor, categoria, data })
+      });
+      loadExpenses();
+    }
+
+    async function updateExpense(id, btn) {
+      const tr = btn.parentElement.parentElement;
+      const descricao = tr.children[1].textContent;
+      const valor = parseFloat(tr.children[2].textContent);
+      const categoria = tr.children[3].textContent;
+      const data = tr.children[4].textContent;
+
+      await fetch(`/expenses/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ descricao, valor, categoria, data })
+      });
+      loadExpenses();
+    }
+
+    async function deleteExpense(id) {
+      await fetch(`/expenses/${id}`, { method: 'DELETE' });
+      loadExpenses();
+    }
+
+    function addCategory() {
+      const nova = prompt("Digite o nome da nova categoria:");
+      if (nova && !categorias.includes(nova)) {
+        categorias.push(nova);
+        loadCategories([{ categoria: nova }]);
+      }
+    }
+
+    function filterExpenses() {
+      const search = document.getElementById('searchBar').value.toLowerCase();
+      const filtradas = todasDespesas.filter(e =>
+        e.descricao.toLowerCase().includes(search) ||
+        e.categoria.toLowerCase().includes(search)
+      );
+      renderTable(filtradas);
+    }
+
+    loadExpenses();
+  </script>
+</body>
+</html>
+
