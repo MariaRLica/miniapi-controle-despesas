@@ -9,7 +9,7 @@ Inclui **CRUD completo**, **filtro por categoria**, **resumo financeiro**, e **d
 
 ### 🌀 Clonar o repositório
 ```bash
-git clone https://github.com/seu-usuario/miniapi-controle-despesas.git
+git clone https://github.com/mariaRlica/miniapi-controle-despesas.git
 cd miniapi-controle-despesas
 ```
 
