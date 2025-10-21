@@ -182,6 +182,3 @@ Durante o desenvolvimento desta API, foram aplicados conceitos de:
 🏫 **Curso: Sistema de Informação**
 
 ---
-
-📌 **Repositório público:**  
-🔗 [https://github.com/seu-usuario/miniapi-controle-despesas](https://github.com/seu-usuario/miniapi-controle-despesas)
