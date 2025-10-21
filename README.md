@@ -169,6 +169,10 @@ Durante o desenvolvimento desta API, foram aplicados conceitos de:
 - Desenvolvimento de **interface web dinâmica** com Chart.js e Fetch API  
 
 ---
+<img width="1804" height="967" alt="Captura de tela de 2025-10-20 23-11-09" src="https://github.com/user-attachments/assets/c4de9ee1-d1de-4d8c-8802-f148f2680c0f" />
+
+
+
 
 ## ✨ Autora
 
