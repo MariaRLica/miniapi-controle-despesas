@@ -1,14 +1,5 @@
-name: SonarQube
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
-
 jobs:
-  SonarQube:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,7 +10,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: 'temurin'
+          distribution: temurin
 
       - name: Cache SonarQube packages
         uses: actions/cache@v3
@@ -34,6 +25,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npx sonar-scanner \
-            -Dsonar.organization=marialrica \
+            -Dsonar.organization=marialica \
             -Dsonar.projectKey=MariaRLica_miniapi-controle-despesas \
-            -Dsonar.sources=.
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://sonarcloud.io
