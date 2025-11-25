@@ -1,73 +1,73 @@
-from flask import Flask
-from src.routes import expenses_bp
+# src/app.py
+
+from flask import Flask, url_for
+# Importa AMBOS os Blueprints necessários:
+from src.routes import expenses_bp, exchange_bp 
+
+# Importa a função que você precisa para o filtro, se necessário.
+# Por exemplo, para formatar moedas no HTML, mas vamos ignorar o filtro por enquanto.
+# from src.models import format_currency 
+
 
 def create_app():
-    app = Flask(__name__)
+    # 1. Cria a instância da aplicação Flask
+    app = Flask(__name__, static_folder='static', template_folder='templates')
 
-    # carregar configurações
+    # carregar configurações (verifique se src.config.Config existe)
     app.config.from_object('src.config.Config')
+    
+    # Exemplo de como adicionar um filtro de template, se necessário:
+    # app.jinja_env.filters['formatar_moeda'] = format_currency 
 
-    # registrar blueprint de despesas
+    # 2. Registra AMBOS os blueprints DENTRO da função create_app
     app.register_blueprint(expenses_bp)
+    app.register_blueprint(exchange_bp) 
+
+   # src/app.py (Apenas o trecho da função home())
+
+# Certifique-se de que url_for está importado: from flask import Flask, url_for
+# ...
 
     @app.route('/')
     def home():
-        return """
+        return f"""
         <html>
             <head>
                 <title>💰 Mini API - Controle de Despesas</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        background: linear-gradient(135deg, #dbeafe, #e0f2fe);
-                        color: #1e293b;
-                        text-align: center;
-                        padding: 40px;
-                    }
-                    h1 {
-                        color: #0ea5e9;
-                    }
-                    .card {
-                        background: white;
-                        border-radius: 16px;
-                        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                        padding: 20px;
-                        margin: 20px auto;
-                        width: 60%;
-                        transition: 0.3s;
-                    }
-                    .card:hover {
-                        transform: scale(1.02);
-                    }
-                    a {
-                        text-decoration: none;
-                        color: #0ea5e9;
-                        font-weight: bold;
-                    }
-                    footer {
-                        margin-top: 40px;
-                        color: #64748b;
-                    }
-                </style>
+                <link rel="stylesheet" href="{url_for('static', filename='style.css')}">
             </head>
             <body>
-                <h1>💰 API de Controle de Despesas</h1>
-                <p>Bem-vindo! Use os endpoints abaixo para explorar as rotas da API:</p>
-
-                <div class="card">
-                    <p>📄 <a href="/expenses/">GET /expenses</a> — Lista todas as despesas</p>
-                    <p>🧾 <a href="/expenses/categoria/Transporte">GET /expenses/categoria/&lt;categoria&gt;</a> — Filtra por categoria</p>
-                    <p>📊 <a href="/expenses/resumo">GET /expenses/resumo</a> — Exibe o resumo financeiro</p>
+                <div class="header">
+                    <h1 class="title">💰 API de Controle de Despesas</h1>
                 </div>
+                <div class="container">
+                    <p>Bem-vindo! Use os links abaixo para acessar os painéis visuais:</p>
 
-                <footer>Desenvolvido por <strong>Maria Licá</strong> 🪶 — Flask API • 2025</footer>
+                    <div class="card">
+                        <div class="link-item">📝 <a href="/expenses/dashboard">Dashboard de Despesas (CRUD VISUAL)</a> — Listar, Adicionar e Excluir</div>
+                        <div class="link-item">📊 <a href="/expenses/resumo/visual">Resumo Financeiro (Gráfico)</a> — Visualização de gastos por categoria</div>
+                        <div class="link-item">💱 <a href="/exchange/convert">Conversor USD para BRL (INTERATIVO)</a> — Nova funcionalidade do TDE2</div>
+                    </div>
+
+                    <p>
+                        <small>Para acessar a API JSON pura:</small>
+                        <a href="/expenses/">/expenses/</a> | 
+                        <a href="/exchange/usd-to-brl">/exchange/usd-to-brl</a>
+                    </p>
+
+                    <footer>Desenvolvido por <strong>Maria Licá</strong> 🪶 — Flask API • 2025</footer>
+                </div>
             </body>
         </html>
         """
 
     return app
 
+# ...
+
 
 if __name__ == '__main__':
+    # Este bloco só é executado se você rodar 'python src/app.py'
+    # Ao usar 'flask run', este bloco é ignorado.
     app = create_app()
     app.run(debug=True)

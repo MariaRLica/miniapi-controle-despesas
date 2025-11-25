@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Resumo Financeiro</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #0ea5e9; }
+        .card { border: 1px solid #941a80; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+        .category-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dotted #d67ba9; }
+        .total { font-weight: bold; margin-top: 10px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1>📊 Resumo Financeiro</h1>
+
+    <div class="card">
+        <h2>Totais</h2>
+        <div class="total">Total Geral: R$ {{ resumo.total_geral }}</div>
+        <div class="total">Total por Mês: R$ {{ resumo.total_por_mes }}</div>
+    </div>
+
+    <div class="card">
+        <h2>Resumo por Categoria</h2>
+        {% for categoria, valor in resumo.resumo_por_categoria.items() %}
+            <div class="category-item">
+                <span>{{ categoria }}:</span>
+                <span>R$ {{ valor }}</span>
+            </div>
+        {% endfor %}
+    </div>

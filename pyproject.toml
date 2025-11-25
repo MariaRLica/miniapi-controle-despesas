@@ -1,0 +1,8 @@
+# ~/miniapi/pyproject.toml
+
+[tool.pytest.ini_options]
+# Adiciona o diretório atual (raiz do projeto) ao PYTHONPATH
+# Isso permite que os testes importem 'src.core.exchange_service' corretamente.
+pythonpath = [
+    "."
+]

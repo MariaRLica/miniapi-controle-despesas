@@ -1,0 +1,45 @@
+/* src/static/style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #08373d 0%, #b2ebf2 100%); /* Fundo azul claro */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.header {
+    background-color: #420834; /* Azul mais forte para o cabeçalho */
+    color: rgb(129, 48, 48);
+    padding: 20px 0;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.card {
+    background: rgb(155, 16, 16);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin: 10px 0;
+    text-align: left;
+}
+.link-item {
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+}
+.link-item a {
+    color: #00bcd4;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+.link-item a:hover {
+    color: #008ba3;
+}
+.title {
+    color: #00bcd4;
+}

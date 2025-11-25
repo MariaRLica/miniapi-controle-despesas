@@ -1,0 +1,62 @@
+
+1.0PythonFrontend"1764036740392*py2.B™
+
+imports1
+
+extends2
+
+returns3
+
+	has param4
+
+module5
+
+
+class6
+
+function7
+!
+src/core/exchange_service.py9
+
+exchange_service11
+
+requests12
+
+typing14
+3
+-exchange_service.get_usd_to_brl_exchange_rate16
++
+%exchange_service.calculate_conversion18
+
+float20J
+
+8
+89jç
+ 
+10
+10115 *
+8 (
+
+13
+13125
+
+15
+15145
+
+17
+17167 210
+
+19
+19187 210
+
+21
+21206rN
+
+10131*
+8 (
+
+10151*
+8 (
+
+19214*
+8   (

@@ -1,0 +1,7 @@
+organization=mariarlica
+projectKey=mini-api-despesas-maria
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.76752
+dashboardUrl=https://sonarcloud.io/dashboard?id=mini-api-despesas-maria
+ceTaskId=AZq4yLy2zpds3gJJaOtZ
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZq4yLy2zpds3gJJaOtZ

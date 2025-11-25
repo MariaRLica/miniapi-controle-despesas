@@ -97,16 +97,16 @@
 
     th, td {
       padding: 10px 15px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #361b1b;
       text-align: center;
     }
 
     th {
       background: #0284c7;
-      color: white;
+      color: rgb(80, 5, 5);
     }
 
-    tr:hover { background: #e0f2fe; }
+    tr:hover { background: #700f53; }
 
     .categoria-Alimentação { color: #0ea5e9; }
     .categoria-Transporte { color: #22c55e; }
@@ -225,7 +225,7 @@
 
     async function addExpense() {
       const descricao = document.getElementById('descricao').value;
-      const valor = parseFloat(document.getElementById('valor').value);
+      const valor = Number.parseFloat(document.getElementById('valor').value);
       const categoria = document.getElementById('categoria').value;
       const data = document.getElementById('data').value;
 
@@ -240,7 +240,7 @@
     async function updateExpense(id, btn) {
       const tr = btn.parentElement.parentElement;
       const descricao = tr.children[1].textContent;
-      const valor = parseFloat(tr.children[2].textContent);
+      const valor = Number.parseFloat(tr.children[2].textContent);
       const categoria = tr.children[3].textContent;
       const data = tr.children[4].textContent;
 
@@ -274,7 +274,9 @@
       renderTable(filtradas);
     }
 
-    loadExpenses();
+    (async () => {
+        await carregarDespesas();
+    })();
   </script>
 </body>
 </html>
